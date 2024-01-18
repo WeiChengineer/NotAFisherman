@@ -1,4 +1,4 @@
-# AirBnB Clone
+# NotAFisherman
 
 <!-- # `<name of application here>` -->
 
@@ -6,7 +6,7 @@
 
 ![database-schema]
 
-[database-schema]: `<insert link or local path to database schema>`
+[database-schema]: /images/schema.png
 
 ## API Documentation
 
