@@ -137,4 +137,69 @@ router.get('/:spotId', async (req, res) => {
     }
 });
 
+router.post('/', requireAuth, async (req, res) => {
+    const { address, city, state, country, lat, lng, name, description, price } = req.body;
+    const ownerId = req.user.id; 
+
+    try {
+        const newSpot = await Spot.create({
+            ownerId,
+            address,
+            city,
+            state,
+            country,
+            lat,
+            lng,
+            name,
+            description,
+            price
+        });
+
+        return res.status(201).json(newSpot);
+    } catch (err) {
+        if (err.name === 'SequelizeValidationError') {
+            const errors = {};
+            err.errors.forEach((error) => {
+                errors[error.path] = error.message;
+            });
+            return res.status(400).json({ message: "Validation error", errors });
+        } else {
+            console.error(err);
+            return res.status(500).json({ error: err.message });
+        }
+    }
+});
+
+router.post('/:spotId/images', requireAuth, async (req, res) => {
+    const { spotId } = req.params;
+    const { url, preview } = req.body;
+    const userId = req.user.id;
+
+    try {
+        const spot = await Spot.findByPk(spotId);
+        if (!spot) {
+            return res.status(404).json({ message: "Spot couldn't be found" });
+        }
+
+        if (spot.ownerId !== userId) {
+            return res.status(403).json({ message: "Forbidden. You don't have permission to add an image to this spot." });
+        }
+
+        const newImage = await SpotImage.create({
+            spotId,
+            url,
+            preview
+        });
+
+        res.status(200).json({
+            id: newImage.id,
+            url: newImage.url,
+            preview: newImage.preview
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
 module.exports = router;
