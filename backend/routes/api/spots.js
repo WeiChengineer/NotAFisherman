@@ -46,8 +46,11 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/current', requireAuth, async (req, res) => {
+    
     try {
         const currentUserId = req.user.id;
+
+        console.log("Edit Booking Route Reached: Booking ID -", req.params.bookingId)
 
         const ownedSpots = await Spot.findAll({
             where: { ownerId: currentUserId },

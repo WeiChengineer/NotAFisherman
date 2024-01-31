@@ -1,5 +1,5 @@
 const express = require('express');
-const { Review, User, Spot, ReviewImage, SpotImage } = require('../../db/models');
+const { Spot, SpotImage, Review, ReviewImage, User, Booking, Sequelize } = require('../../db/models');
 const { requireAuth } = require('../../utils/auth');
 
 const router = express.Router();
