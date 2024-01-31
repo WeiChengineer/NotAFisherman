@@ -1,5 +1,5 @@
 const express = require('express');
-const { Spot, SpotImage, Review, ReviewImage, User, Sequelize } = require('../../db/models');
+const { Spot, SpotImage, Review, ReviewImage, User, Booking, Sequelize } = require('../../db/models');
 const router = express.Router();
 const { requireAuth } = require('../../utils/auth');
 
@@ -323,6 +323,84 @@ router.post('/:spotId/reviews', requireAuth, async (req, res) => {
         } else {
             res.status(500).json({ error: error.message });
         }
+    }
+});
+
+router.get('/:spotId/bookings', requireAuth, async (req, res) => {
+    const spotId = parseInt(req.params.spotId);
+    const currentUserId = req.user.id;
+
+    if (isNaN(spotId)) {
+        return res.status(400).json({ message: "Spot ID must be a valid integer" });
+    }
+
+    try {
+        const spot = await Spot.findByPk(spotId);
+        if (!spot) {
+            return res.status(404).json({ message: "Spot couldn't be found" });
+        }
+
+        const queryOptions = {
+            where: { spotId },
+            attributes: ['id', 'spotId', 'startDate', 'endDate', 'createdAt', 'updatedAt']
+        };
+
+        if (spot.ownerId === currentUserId) {
+            queryOptions.include = [{
+                model: User,
+                attributes: ['id', 'firstName', 'lastName']
+            }];
+        }
+
+        const bookings = await Booking.findAll(queryOptions);
+
+        res.status(200).json({ Bookings: bookings });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+router.post('/:spotId/bookings', requireAuth, async (req, res) => {
+    const spotId = parseInt(req.params.spotId);
+    const { startDate, endDate } = req.body;
+    const userId = req.user.id;
+
+    if (isNaN(spotId)) {
+        return res.status(400).json({ message: "Spot ID must be a valid integer" });
+    }
+
+    try {
+        const spot = await Spot.findByPk(spotId);
+        if (!spot) {
+            return res.status(404).json({ message: "Spot couldn't be found" });
+        }
+
+        // check owner
+        if (spot.ownerId === userId) {
+            return res.status(403).json({ message: "Cannot book your own spot" });
+        }
+
+        // checking start and end tdates
+        if (new Date(startDate) >= new Date(endDate)) {
+            return res.status(400).json({ errors: { endDate: "endDate cannot be on or before startDate" } });
+        }
+
+        // existing bookings for the spot
+        const existingBookings = await Booking.findAll({ where: { spotId } });
+
+        // existing bookings conflict
+        for (const booking of existingBookings) {
+            if (new Date(startDate) < new Date(booking.endDate) && new Date(endDate) > new Date(booking.startDate)) {
+                return res.status(403).json({ message: "Sorry, this spot is already booked for the specified dates" });
+            }
+        }
+
+        const newBooking = await Booking.create({ userId, spotId, startDate, endDate });
+        res.status(201).json(newBooking);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
     }
 });
 

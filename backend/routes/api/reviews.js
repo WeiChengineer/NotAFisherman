@@ -68,6 +68,60 @@ router.post('/:reviewId/images', requireAuth, async (req, res) => {
     }
 });
 
+router.put('/:reviewId', requireAuth, async (req, res) => {
+    const { reviewId } = req.params;
+    const { review: newReviewText, stars: newStars } = req.body;
+    const userId = req.user.id;
 
+    try {
+        const review = await Review.findByPk(reviewId);
+
+        if (!review) {
+            return res.status(404).json({ message: "Review couldn't be found" });
+        }
+
+        if (review.userId !== userId) {
+            return res.status(403).json({ message: "Not authorized to edit this review" });
+        }
+
+        review.review = newReviewText;
+        review.stars = newStars;
+        await review.save();
+
+        res.status(200).json(review);
+    } catch (err) {
+        console.error(err);
+        if (err.name === 'SequelizeValidationError') {
+            const errors = err.errors.map(e => ({ [e.path]: e.message }));
+            res.status(400).json({ message: "Validation error", errors });
+        } else {
+            res.status(500).json({ error: err.message });
+        }
+    }
+});
+
+router.delete('/:reviewId', requireAuth, async (req, res) => {
+    const { reviewId } = req.params;
+    const userId = req.user.id;
+
+    try {
+        const review = await Review.findByPk(reviewId);
+
+        if (!review) {
+            return res.status(404).json({ message: "Review couldn't be found" });
+        }
+
+        if (review.userId !== userId) {
+            return res.status(403).json({ message: "Not authorized to delete this review" });
+        }
+
+        await review.destroy();
+
+        res.status(200).json({ message: "Successfully deleted" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+});
 
 module.exports = router;
