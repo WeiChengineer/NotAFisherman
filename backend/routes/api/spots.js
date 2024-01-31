@@ -91,6 +91,7 @@ router.get('/current', requireAuth, async (req, res) => {
 });
 
 router.get('/:spotId', async (req, res) => {
+
     try {
         const spotId = parseInt(req.params.spotId, 10)
 
