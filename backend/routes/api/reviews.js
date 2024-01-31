@@ -1,0 +1,73 @@
+const express = require('express');
+const { Review, User, Spot, ReviewImage, SpotImage } = require('../../db/models');
+const { requireAuth } = require('../../utils/auth');
+
+const router = express.Router();
+
+router.get('/current', requireAuth, async (req, res) => {
+    const userId = req.user.id;
+
+    try {
+        const reviews = await Review.findAll({
+            where: { userId },
+            include: [
+                {
+                    model: User,
+                    attributes: ['id', 'firstName', 'lastName']
+                },
+                {
+                    model: Spot,
+                    attributes: ['id', 'ownerId', 'address', 'city', 'state', 'country', 'lat', 'lng', 'name', 'price'],
+                    include: [{
+                        model: SpotImage,
+                        attributes: ['url'],
+                        where: { preview: true },
+                        required: false
+                    }]
+                },
+                {
+                    model: ReviewImage,
+                    attributes: ['id', 'url']
+                }
+            ]
+        });
+
+        res.status(200).json({ Reviews: reviews });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+router.post('/:reviewId/images', requireAuth, async (req, res) => {
+    const { reviewId } = req.params;
+    const { url } = req.body;
+    const userId = req.user.id;
+
+    try {
+        const review = await Review.findByPk(reviewId);
+
+        if (!review) {
+            return res.status(404).json({ message: "Review couldn't be found" });
+        }
+
+        if (review.userId !== userId) {
+            return res.status(403).json({ message: "Not authorized to add image to this review" });
+        }
+
+        const count = await ReviewImage.count({ where: { reviewId } });
+        if (count >= 10) {
+            return res.status(403).json({ message: "Maximum number of images for this resource was reached" });
+        }
+
+        const reviewImage = await ReviewImage.create({ reviewId, url });
+        res.status(200).json(reviewImage);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
+
+module.exports = router;

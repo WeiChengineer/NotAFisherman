@@ -12,28 +12,48 @@ module.exports = (sequelize, DataTypes) => {
 
   Review.init({
     id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-      allowNull: false
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false
     },
     userId: {
-      type: DataTypes.INTEGER,
-      allowNull: false
+        type: DataTypes.INTEGER,
+        allowNull: false
     },
     spotId: {
-      type: DataTypes.INTEGER,
-      allowNull: false
+        type: DataTypes.INTEGER,
+        allowNull: false
     },
-    review: DataTypes.TEXT,
+    review: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        validate: {
+            notEmpty: {
+                msg: "Review text is required"
+            }
+        }
+    },
     stars: {
-      type: DataTypes.INTEGER,
-      validate: { min: 1, max: 5 }
+        type: DataTypes.INTEGER,
+        validate: {
+            min: {
+                args: 1,
+                msg: "Stars must be an integer from 1 to 5"
+            },
+            max: {
+                args: 5,
+                msg: "Stars must be an integer from 1 to 5"
+            },
+            isInt: {
+                msg: "Stars must be an integer"
+            }
+        }
     }
-  }, {
+}, {
     sequelize,
     modelName: 'Review'
-  });
+});
 
   return Review;
 };
