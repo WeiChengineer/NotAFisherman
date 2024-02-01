@@ -30,7 +30,6 @@ router.get('/current', requireAuth, async (req, res) => {
     }
 });
 
-//Edit bookings
 router.put('/:bookingId', requireAuth, async (req, res) => {
     const { startDate, endDate } = req.body;
     const bookingId = req.params.bookingId;
@@ -50,7 +49,10 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
             return res.status(403).json({ message: "Past bookings can't be modified" });
         }
 
-        if (new Date(startDate) >= new Date(endDate)) {
+        const startDateObj = new Date(startDate);
+        const endDateObj = new Date(endDate);
+
+        if (startDateObj >= endDateObj) {
             return res.status(400).json({ errors: { endDate: "endDate cannot come before startDate" } });
         }
 
@@ -62,7 +64,12 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
         });
 
         for (const existingBooking of existingBookings) {
-            if (new Date(startDate) < new Date(existingBooking.endDate) && new Date(endDate) > new Date(existingBooking.startDate)) {
+            const existingStartDate = new Date(existingBooking.startDate);
+            const existingEndDate = new Date(existingBooking.endDate);
+
+            if ((startDateObj < existingEndDate && endDateObj > existingStartDate) ||
+                startDateObj.getTime() === existingEndDate.getTime() ||
+                endDateObj.getTime() === existingStartDate.getTime()) {
                 return res.status(403).json({
                     message: "Sorry, this spot is already booked for the specified dates",
                     errors: {
@@ -83,6 +90,7 @@ router.put('/:bookingId', requireAuth, async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
 
 router.delete('/:bookingId', requireAuth, async (req, res, next) => {
     try {

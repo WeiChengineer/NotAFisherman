@@ -7,22 +7,22 @@ router.get('/', async (req, res) => {
     try {
         let page = parseInt(req.query.page) || 1;
         let size = parseInt(req.query.size) || 20;
-        const minLat = parseFloat(req.query.minLat);
-        const maxLat = parseFloat(req.query.maxLat);
-        const minLng = parseFloat(req.query.minLng);
-        const maxLng = parseFloat(req.query.maxLng);
-        const minPrice = parseFloat(req.query.minPrice);
-        const maxPrice = parseFloat(req.query.maxPrice);
+        const minLat = req.query.minLat !== undefined ? parseFloat(req.query.minLat) : undefined;
+        const maxLat = req.query.maxLat !== undefined ? parseFloat(req.query.maxLat) : undefined;
+        const minLng = req.query.minLng !== undefined ? parseFloat(req.query.minLng) : undefined;
+        const maxLng = req.query.maxLng !== undefined ? parseFloat(req.query.maxLng) : undefined;
+        const minPrice = req.query.minPrice !== undefined ? parseFloat(req.query.minPrice) : undefined;
+        const maxPrice = req.query.maxPrice !== undefined ? parseFloat(req.query.maxPrice) : undefined;
 
         let errors = {};
         if (page < 1) errors.page = "Page must be greater than or equal to 1";
-        if (size < 1 || size > 20) errors.size = "Size must be greater than or equal to 1";
+        if (size < 1 || size > 20) errors.size = "Size must be between 1 and 20";
         if (minLat !== undefined && (isNaN(minLat) || minLat < -90 || minLat > 90)) errors.minLat = "Minimum latitude is invalid";
         if (maxLat !== undefined && (isNaN(maxLat) || maxLat < -90 || maxLat > 90)) errors.maxLat = "Maximum latitude is invalid";
         if (minLng !== undefined && (isNaN(minLng) || minLng < -180 || minLng > 180)) errors.minLng = "Minimum longitude is invalid";
         if (maxLng !== undefined && (isNaN(maxLng) || maxLng < -180 || maxLng > 180)) errors.maxLng = "Maximum longitude is invalid";
-        if ((minPrice !== undefined && isNaN(minPrice)) || minPrice < 0) errors.minPrice = "Minimum price must be greater than or equal to 0";
-        if ((maxPrice !== undefined && isNaN(maxPrice)) || maxPrice < 0) errors.maxPrice = "Maximum price must be greater than or equal to 0";
+        if (minPrice !== undefined && (isNaN(minPrice) || minPrice < 0)) errors.minPrice = "Minimum price must be greater than or equal to 0";
+        if (maxPrice !== undefined && (isNaN(maxPrice) || maxPrice < 0)) errors.maxPrice = "Maximum price must be greater than or equal to 0";
 
         if (Object.keys(errors).length > 0) {
             return res.status(400).json({ message: "Bad Request", errors });
@@ -40,6 +40,7 @@ router.get('/', async (req, res) => {
         let limit = size;
 
         const spots = await Spot.findAll({
+            where,
             include: [
                 {
                     model: SpotImage,
@@ -63,8 +64,6 @@ router.get('/', async (req, res) => {
             subQuery: false,
             order: [['id']]
         });
-        
-        
 
         const spotsResponse = spots.map(spot => {
             const spotJSON = spot.toJSON();
@@ -422,22 +421,27 @@ router.post('/:spotId/bookings', requireAuth, async (req, res) => {
             return res.status(404).json({ message: "Spot couldn't be found" });
         }
 
-        // check owner
         if (spot.ownerId === userId) {
             return res.status(403).json({ message: "Cannot book your own spot" });
         }
 
-        // checking start and end tdates
-        if (new Date(startDate) >= new Date(endDate)) {
+        const startDateObj = new Date(startDate);
+        const endDateObj = new Date(endDate);
+
+        if (startDateObj >= endDateObj) {
             return res.status(400).json({ errors: { endDate: "endDate cannot be on or before startDate" } });
         }
 
-        // existing bookings for the spot
         const existingBookings = await Booking.findAll({ where: { spotId } });
 
-        // existing bookings conflict
         for (const booking of existingBookings) {
-            if (new Date(startDate) < new Date(booking.endDate) && new Date(endDate) > new Date(booking.startDate)) {
+            const existingStartDate = new Date(booking.startDate);
+            const existingEndDate = new Date(booking.endDate);
+
+            // Check if the new booking dates conflict with existing bookings
+            if ((startDateObj < existingEndDate && endDateObj > existingStartDate) ||
+                startDateObj.getTime() === existingEndDate.getTime() || 
+                endDateObj.getTime() === existingStartDate.getTime()) {
                 return res.status(403).json({ message: "Sorry, this spot is already booked for the specified dates" });
             }
         }
@@ -449,6 +453,5 @@ router.post('/:spotId/bookings', requireAuth, async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-
 
 module.exports = router;
