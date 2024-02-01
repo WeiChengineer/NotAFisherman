@@ -1,20 +1,16 @@
 'use strict';
 
-/** @type {import('sequelize-cli').Migration} */
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA; // Define your schema in options object
+}
+
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
-    await queryInterface.bulkInsert('Spots', [
+  up: (queryInterface, Sequelize) => {
+    options.tableName = 'Spots'; // Define table name in options object
+    return queryInterface.bulkInsert(options, [
       {
-        ownerId: 1, 
+        ownerId: 1,
         address: '123 Fake street',
         city: 'San Francisco',
         state: 'California',
@@ -28,7 +24,7 @@ module.exports = {
         updatedAt: new Date()
       },
       {
-        ownerId: 2, 
+        ownerId: 2,
         address: '123 Faker street',
         city: 'New York',
         state: 'New York',
@@ -42,7 +38,7 @@ module.exports = {
         updatedAt: new Date()
       },
       {
-        ownerId: 3, 
+        ownerId: 3,
         address: '123 Fakest street',
         city: 'Denver',
         state: 'Colorado',
@@ -54,17 +50,12 @@ module.exports = {
         price: 75,
         createdAt: new Date(),
         updatedAt: new Date()
-      },
-    ], { validate: true });
+      }
+    ]);
   },
 
-  async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
-    await queryInterface.bulkDelete('Spots', null, {});
+  down: (queryInterface, Sequelize) => {
+    options.tableName = 'Spots'; // Define table name in options object
+    return queryInterface.bulkDelete(options, null, {});
   }
 };
