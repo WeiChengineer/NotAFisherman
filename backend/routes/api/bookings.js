@@ -7,7 +7,7 @@ router.get('/current', requireAuth, async (req, res) => {
     const userId = req.user.id;
 
     try {
-        const bookings = await Booking.findAll({
+        let bookings = await Booking.findAll({
             where: { userId },
             include: [
                 {
@@ -21,6 +21,29 @@ router.get('/current', requireAuth, async (req, res) => {
                     }]
                 }
             ]
+        });
+
+        bookings = bookings.map(booking => {
+            const bookingJSON = booking.toJSON();
+
+            const previewImage = bookingJSON.Spot.SpotImages.length > 0 ? bookingJSON.Spot.SpotImages[0].url : null;
+
+            bookingJSON.Spot.previewImage = previewImage;
+            delete bookingJSON.Spot.SpotImages;
+
+            return {
+                id: bookingJSON.id,
+                spotId: bookingJSON.spotId,
+                Spot: {
+                    ...bookingJSON.Spot,
+                    previewImage: previewImage 
+                },
+                userId: bookingJSON.userId,
+                startDate: bookingJSON.startDate,
+                endDate: bookingJSON.endDate,
+                createdAt: bookingJSON.createdAt,
+                updatedAt: bookingJSON.updatedAt
+            };
         });
 
         res.status(200).json({ Bookings: bookings });

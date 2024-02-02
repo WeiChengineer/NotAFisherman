@@ -8,7 +8,7 @@ router.get('/current', requireAuth, async (req, res) => {
     const userId = req.user.id;
 
     try {
-        const reviews = await Review.findAll({
+        let reviews = await Review.findAll({
             where: { userId },
             include: [
                 {
@@ -30,6 +30,18 @@ router.get('/current', requireAuth, async (req, res) => {
                     attributes: ['id', 'url']
                 }
             ]
+        });
+
+        reviews = reviews.map(review => review.toJSON());
+
+        reviews.forEach(review => {
+            if (review.Spot.SpotImages && review.Spot.SpotImages.length > 0) {
+                review.Spot.previewImage = review.Spot.SpotImages[0].url;
+            } else {
+                review.Spot.previewImage = null;
+            }
+
+            delete review.Spot.SpotImages;
         });
 
         res.status(200).json({ Reviews: reviews });

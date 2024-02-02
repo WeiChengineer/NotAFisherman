@@ -371,35 +371,59 @@ router.post('/:spotId/reviews', requireAuth, async (req, res) => {
     }
 });
 
+//CAITLIN ERROR HERE, STOP DELETING OTHER STUFF FFS
 router.get('/:spotId/bookings', requireAuth, async (req, res) => {
-    const spotId = parseInt(req.params.spotId);
-    const currentUserId = req.user.id;
-
-    if (isNaN(spotId)) {
-        return res.status(400).json({ message: "Spot ID must be a valid integer" });
-    }
+    const { spotId } = req.params;
+    const userId = req.user.id; 
 
     try {
-        const spot = await Spot.findByPk(spotId);
+        const spot = await Spot.findByPk(spotId, {
+            attributes: ['id', 'ownerId']
+        });
         if (!spot) {
             return res.status(404).json({ message: "Spot couldn't be found" });
         }
 
-        const queryOptions = {
+        const isOwner = spot.ownerId === userId;
+
+        const bookings = await Booking.findAll({
             where: { spotId },
-            attributes: ['id', 'spotId', 'startDate', 'endDate', 'createdAt', 'updatedAt']
-        };
+            ...(isOwner ? {
+                include: [{
+                    model: User,
+                    attributes: ['id', 'firstName', 'lastName']
+                }],
+                attributes: ['id', 'spotId', 'userId', 'startDate', 'endDate', 'createdAt', 'updatedAt']
+            } : {
+                attributes: ['spotId', 'startDate', 'endDate']
+            })
+        });
 
-        if (spot.ownerId === currentUserId) {
-            queryOptions.include = [{
-                model: User,
-                attributes: ['id', 'firstName', 'lastName']
-            }];
-        }
+        const formattedBookings = bookings.map(booking => {
+            if (!isOwner) {
+                return {
+                    spotId: booking.spotId,
+                    startDate: booking.startDate,
+                    endDate: booking.endDate
+                };
+            }
+            return {
+                User: {
+                    id: booking.User.id,
+                    firstName: booking.User.firstName,
+                    lastName: booking.User.lastName
+                },
+                id: booking.id,
+                spotId: booking.spotId,
+                userId: booking.userId,
+                startDate: booking.startDate,
+                endDate: booking.endDate,
+                createdAt: booking.createdAt,
+                updatedAt: booking.updatedAt
+            };
+        });
 
-        const bookings = await Booking.findAll(queryOptions);
-
-        res.status(200).json({ Bookings: bookings });
+        res.status(200).json({ Bookings: formattedBookings });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: err.message });
