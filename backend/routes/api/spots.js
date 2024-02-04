@@ -471,7 +471,7 @@ router.post('/:spotId/bookings', requireAuth, async (req, res) => {
         }
 
         const newBooking = await Booking.create({ userId, spotId, startDate, endDate });
-        res.status(201).json(newBooking);
+        res.status(200).json(newBooking);
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: err.message });
