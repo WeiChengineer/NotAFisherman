@@ -1,0 +1,80 @@
+.navigation {
+  border-bottom: #d6d5d5 1px solid;
+}
+
+/* Logo and branding */
+.brand {
+  padding-left: 20px;
+  height: 40px;
+}
+
+/* Container with no padding for navbar */
+.nav-container {
+  padding-block: 6px;
+  max-width: 95vw;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Navigation */
+nav {
+  float: right;
+}
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+nav ul li {
+  float: left;
+  position: relative;
+}
+nav ul li {
+  padding: 15px;
+  line-height: 20px;
+  font-size: 20px;
+  display: block;
+  padding: 10 20px;
+  border-radius: 10px;
+  /* line-height: 70px; */
+  color: black;
+  cursor: pointer;
+
+  text-decoration: none;
+}
+nav ul li:hover {
+  background: #ff5a5f;
+  color: #fff;
+}
+
+/* Dropdown list */
+
+.menu-item {
+  cursor: pointer;
+  padding: 8px 20px;
+  font-size: medium;
+  background-color: white;
+  z-index: 10000;
+  min-width: 190px;
+}
+.menu-item p {
+  height: fit-content;
+  padding: 0px;
+}
+.menu-item:hover {
+  background: #ff5a5f;
+  color: #fff;
+}
+/* Dropdown list binds to JS toggle event */
+.nav-dropdown {
+  position: absolute;
+  display: block;
+  right: 0;
+  top: 50px;
+  background-color: white;
+  border-radius: 10px;
+  z-index: 1;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+}

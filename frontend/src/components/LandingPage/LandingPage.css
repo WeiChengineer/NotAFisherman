@@ -1,0 +1,70 @@
+.home__section {
+  display: flex;
+  padding: 30px;
+  flex-wrap: wrap;
+}
+
+.spot-tile-link {
+  text-decoration: none;
+  color: inherit;
+  flex: 1 0 calc(25% -15px);
+  max-width: calc(25% - 15px);
+  box-sizing: border-box;
+  margin: 5px;
+}
+.update_spot_btn {
+  width: 40%;
+  margin-inline: auto;
+  /* margin-top: 4rem; */
+  padding: 1rem 1.6rem;
+  border: 1px solid #ff5a5f;
+  border-radius: 10px;
+
+  color: white;
+  text-transform: uppercase;
+  background: #ff5a5f;
+  font-size: 1.4rem;
+  font-family: inherit;
+  letter-spacing: 0.2rem;
+
+  transition: 0.2s;
+  cursor: pointer;
+}
+.delete_spot_btn {
+  width: 40%;
+  margin-inline: auto;
+  /* margin-top: 4rem; */
+  padding: 1rem 1.6rem;
+  border: 1px solid #ff5a5f;
+  border-radius: 10px;
+
+  color: white;
+  text-transform: uppercase;
+  background: #ff5a5f;
+  font-size: 1.4rem;
+  font-family: inherit;
+  letter-spacing: 0.2rem;
+
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.home__section > * {
+  min-width: 290px; /* Adjust the value as needed */
+}
+@media (max-width: 1023px) {
+  .spot-tile-link {
+    max-width: calc(50% - 15px);
+  }
+}
+@media (max-width: 799px) {
+  .spot-tile-link {
+    max-width: calc(40% - 15px);
+  }
+}
+
+@media (max-width: 639px) {
+  .home__section > * {
+    min-width: 100%; /* Adjust the value as needed */
+  }
+}

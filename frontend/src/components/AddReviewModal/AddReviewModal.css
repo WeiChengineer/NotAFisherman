@@ -1,0 +1,32 @@
+input[type="radio"] {
+  display: none;
+}
+.review_star {
+  cursor: pointer;
+  font-size: 2rem;
+  margin: 5px;
+}
+
+.review_rating {
+  width: 90%;
+  margin-inline: auto;
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 500px;
+  margin-bottom: 20px;
+}
+
+textarea {
+  width: 350px;
+}
