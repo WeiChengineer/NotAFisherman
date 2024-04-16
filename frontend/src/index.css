@@ -1,0 +1,54 @@
+/* TODO: Add sitewide styles */
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+a,
+a:link {
+  font-family: inherit;
+  text-decoration: none;
+}
+
+a:focus {
+  outline: none;
+}
+.row {
+  display: flex;
+}
+.w-full {
+  width: 100%;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.justify-end {
+  justify-content: end;
+}
+
+.items-center {
+  align-items: center;
+}
+
+hr {
+  height: 2px; /* Set the height of the horizontal rule */
+  width: 100%; /* Set the width to 100% to span the entire container */
+  margin: 20px 0; /* Add margin for spacing */
+  border: none; /* Remove default border */
+  background-color: #ddd; /* Set background color */
+}
+
+.relative {
+  position: relative;
+}
+
+.gap {
+  gap: 2em;
+}

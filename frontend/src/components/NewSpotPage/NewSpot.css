@@ -1,0 +1,86 @@
+.new-spot-container {
+  max-width: 800px;
+  width: 40vw;
+  min-width: 300px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.new-spot-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+h1 {
+  margin-bottom: 10px;
+  font-size: 3em;
+}
+h2 {
+  font-size: 2em;
+}
+p {
+  font-size: 1.3em;
+  font-weight: 100;
+}
+label {
+  font-weight: bold;
+  font-size: 1.5em;
+}
+label,
+p,
+h2 {
+  text-align: left;
+  width: 100%;
+}
+
+input,
+textarea {
+  padding: 10px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.error-message {
+  color: red;
+  margin-top: 5px;
+}
+
+.new-spot-btn {
+  width: 50%;
+  padding: 10px;
+  background: #ff5a5f;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.new-spot-btn:hover {
+  background-color: #e42f35;
+}
+
+.new-spot-form-group {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 2em;
+}
+
+/* .new-spot-form-group {
+  display: flex;
+  flex-direction: column;
+} */
+
+@media screen and (max-width: 900px) {
+  .new-spot-form-group {
+    flex-direction: column;
+    gap: 15px; /* Adjust the gap as needed for smaller screens */
+  }
+
+  .new-spot-form-group > * {
+    width: 100%; /* Full width for items in column layout */
+  }
+}
