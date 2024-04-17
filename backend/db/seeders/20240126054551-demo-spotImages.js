@@ -12,21 +12,21 @@ module.exports = {
     await queryInterface.bulkInsert(options, [
       {
         spotId: 1,
-        url: 'http://example.com/spot1.jpg',
+        url: 'https://i.imgur.com/gSUfI3K.jpeg',
         preview: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         spotId: 2,
-        url: 'http://example.com/spot2.jpg', 
+        url: 'https://i.imgur.com/vRYuQt6.jpeg', 
         preview: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         spotId: 3,
-        url: 'http://example.com/spot3.jpg', 
+        url: 'https://i.imgur.com/pgwbVju_d.webp?maxwidth=1520&fidelity=grand', 
         createdAt: new Date(),
         updatedAt: new Date()
       },
