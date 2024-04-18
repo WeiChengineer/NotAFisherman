@@ -14,7 +14,7 @@ const SpotDetail = () => {
   const { spotId } = useParams();
   const dispatch = useDispatch();
   const spot = useSelector((state) => state.spots.spotDetails[spotId]);
-  const reviews = useSelector((state) => state.reviews.reviews[spotId] || []);
+  const reviews = useSelector((state) => state.reviews.reviews[spotId]);
   const currentUser = useSelector((state) => state.session.user);
 
   const [showAddReviewModal, setShowAddReviewModal] = useState(false);
@@ -44,7 +44,7 @@ const SpotDetail = () => {
   };
 
   // Image
-  const defaultImage = "https://t3.ftcdn.net/jpg/04/34/72/82/360_F_434728286_OWQQvAFoXZLdGHlObozsolNeuSxhpr84.jpg";
+  const defaultImage = "";
   const previewImage = spot.SpotImages?.find((image) => image.preview)?.url || defaultImage;
   const otherImages = spot.SpotImages?.filter((image) => !image.preview).map((image) => image.url) || [];
   while (otherImages.length < 4) {

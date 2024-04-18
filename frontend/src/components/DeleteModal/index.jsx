@@ -8,31 +8,30 @@ const DeleteModal = ({ visible, onClose, itemName, itemId, onDeleted }) => {
   const dispatch = useDispatch();
 
   const handleDelete = () => {
-    const deleteAction = itemName.toLowerCase() === "review" ? deleteReviewById(itemId) : deleteSpotById(itemId);
-    
-    dispatch(deleteAction).then(() => {
-      onClose();  // Close modal
-      onDeleted();  // Callback function to handle UI update
-    });
+      const deleteAction = itemName.toLowerCase() === "review" ? deleteReviewById(itemId) : deleteSpotById(itemId);
+      
+      dispatch(deleteAction).then(() => {
+          if (typeof onDeleted === 'function') {
+              onDeleted();  
+          }
+          onClose();  
+      }).catch(err => {
+          console.error("Error deleting item:", err);
+          onClose();  
+      });
   };
 
   return (
-    <Modal
-      body={
-        <>
-          <p className="delete-modal-content">
-            Are you sure you want to delete this {itemName}?
-          </p>
-        </>
-      }
-      visible={visible}
-      onClose={onClose}
-      header="Confirm Delete"
-      primaryBtnTitle={`Yes (Delete ${itemName})`}
-      primaryBtnFunction={handleDelete}
-      secondaryBtnTitle={`No (Keep ${itemName})`}
-      secondaryBtnFunction={onClose}
-    />
+      <Modal
+          body={<p className="delete-modal-content">Are you sure you want to delete this {itemName}?</p>}
+          visible={visible}
+          onClose={onClose}
+          header="Confirm Delete"
+          primaryBtnTitle={`Yes (Delete ${itemName})`}
+          primaryBtnFunction={handleDelete}
+          secondaryBtnTitle={`No (Keep ${itemName})`}
+          secondaryBtnFunction={onClose}
+      />
   );
 };
 

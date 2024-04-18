@@ -45,6 +45,12 @@
   cursor: pointer;
 }
 
+.create-spot-link {
+  font-size: 25px;
+  margin: 10px;
+}
+
+
 @media (max-width: 1023px) {
   .spot-tile-link {
     max-width: calc(50% - 15px);
