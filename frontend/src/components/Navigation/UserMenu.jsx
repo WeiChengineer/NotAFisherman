@@ -1,9 +1,6 @@
-// frontend/src/components/Navigation/ProfileButton.jsx
-
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 import { useDispatch } from "react-redux";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faUser } from "@fortawesome/free-solid-svg-icons";
 import * as sessionActions from "../../store/session";
@@ -16,23 +13,41 @@ function UserMenu({ user }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [showLoginModal, setLoginModal] = useState(false);
   const [showSignUpModal, setSignUpModal] = useState(false);
+  const dropdownRef = useRef(null);
 
   const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
+    setShowDropdown((prev) => !prev);
   };
 
   const logout = (e) => {
     e.preventDefault();
     dispatch(sessionActions.logout());
-    toggleDropdown();
+    setShowDropdown(false);
     navigate("/");
   };
+
   const updateLoginModalVisibility = () => {
     setLoginModal(!showLoginModal);
   };
+
   const updateSignUpModalVisibility = () => {
     setSignUpModal(!showSignUpModal);
   };
+
+  // Click outside handler
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [dropdownRef]);
 
   return (
     <>
@@ -43,7 +58,7 @@ function UserMenu({ user }) {
           </li>
         </NavLink>
       ) : null}
-      <li onClick={toggleDropdown}>
+      <li ref={dropdownRef} onClick={toggleDropdown}>
         <FontAwesomeIcon icon={faBars} />
         <FontAwesomeIcon icon={faUser} />
 
@@ -51,12 +66,7 @@ function UserMenu({ user }) {
           <ul className="nav-dropdown">
             {user ? (
               <>
-                <li
-                  className="menu-item"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                  }}
-                >
+                <li className="menu-item" onClick={e => e.stopPropagation()}>
                   Hello {user.firstName} <span>{user.email}</span>
                 </li>
                 <NavLink to="/my-spots">

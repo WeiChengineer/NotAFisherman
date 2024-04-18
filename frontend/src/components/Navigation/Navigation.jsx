@@ -12,6 +12,7 @@ const Navigation = ({ isLoaded }) => {
       <div className="navigation-container">
         <NavLink to="/">
           <img src={logo} alt="Home" className="navigation-logo" />
+          <span className='logo-text'>NotAFisherman</span>
         </NavLink>
         <nav>
           <ul className="navigation-list">

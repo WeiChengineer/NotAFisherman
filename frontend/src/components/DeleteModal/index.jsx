@@ -1,23 +1,21 @@
 import Modal from "../Modal";
 import "./DeleteModal.css";
 import { deleteReviewById } from "../../store/reviews";
-import { useDispatch } from "react-redux";
 import { deleteSpotById } from "../../store/spots";
+import { useDispatch } from "react-redux";
 
-const DeleteModal = ({ visible, onClose, itemName, itemId }) => {
+const DeleteModal = ({ visible, onClose, itemName, itemId, onDeleted }) => {
   const dispatch = useDispatch();
 
   const handleDelete = () => {
-    if (itemName.toLowerCase() === "review") {
-      dispatch(deleteReviewById(itemId)).then(() => {
-        onClose();
-      });
-      return;
-    }
-    dispatch(deleteSpotById(itemId)).then(() => {
-      onClose();
+    const deleteAction = itemName.toLowerCase() === "review" ? deleteReviewById(itemId) : deleteSpotById(itemId);
+    
+    dispatch(deleteAction).then(() => {
+      onClose();  // Close modal
+      onDeleted();  // Callback function to handle UI update
     });
   };
+
   return (
     <Modal
       body={

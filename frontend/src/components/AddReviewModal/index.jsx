@@ -18,9 +18,9 @@ const AddReviewModal = ({ visible, onClose, spotId }) => {
     if (isFormValid) {
       dispatch(addReviewToSpotById(spotId, { review: comment, stars: rating }))
         .then(() => {
-          onClose(); 
-          setComment(''); 
-          setRating(null); 
+          onClose();  // Close the modal
+          setComment('');  // Reset comment
+          setRating(null);  // Reset rating
         })
         .catch(async (res) => {
           const data = await res.json();
@@ -35,15 +35,15 @@ const AddReviewModal = ({ visible, onClose, spotId }) => {
     <Modal
       body={
         <div className="form-container">
+          <h3>How was your stay?</h3> {/* Moved header inside modal body for better error placement */}
+          {Object.keys(errors).length > 0 && (  // Display errors below the title
+            <div className="error-messages">
+              {Object.values(errors).map((error, index) => (
+                <div key={index}>{error}</div>
+              ))}
+            </div>
+          )}
           <form onSubmit={handleSubmit}>
-            {/* Displaying errors if any */}
-            {Object.keys(errors).length > 0 && (
-              <div className="error-messages">
-                {Object.values(errors).map((error, index) => (
-                  <div key={index}>{error}</div>
-                ))}
-              </div>
-            )}
             <textarea
               id="comment"
               rows={8}
@@ -75,13 +75,14 @@ const AddReviewModal = ({ visible, onClose, spotId }) => {
                   </label>
                 );
               })}
+              <label className="stars-label">Stars</label>
             </div>
           </form>
         </div>
       }
       visible={visible}
       onClose={onClose}
-      header="How was your stay?"
+      header="" 
       primaryBtnTitle="Submit Your Review"
       primaryBtnDisabled={!isFormValid}
       primaryBtnFunction={handleSubmit}

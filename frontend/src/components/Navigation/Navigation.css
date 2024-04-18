@@ -67,7 +67,7 @@ nav ul li:hover {
   background: #ff5a5f;
   color: #fff;
 }
-/* Dropdown list binds to JS toggle event */
+
 .nav-dropdown {
   position: absolute;
   display: block;
@@ -77,4 +77,16 @@ nav ul li:hover {
   border-radius: 10px;
   z-index: 1;
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+}
+
+.navigation-logo {
+  width: 80px;
+  height: auto;
+  vertical-align: middle; 
+}
+
+.logo-text {
+  font-size: 20px;
+  vertical-align: middle; 
+  margin-left: 10px;
 }
