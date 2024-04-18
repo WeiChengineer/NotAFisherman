@@ -81,6 +81,7 @@
 .spotCard {
   grid-row: auto / span 1;
   grid-column: auto / span 2;
+  
 }
 .spotCard--2x {
   grid-row: auto / span 2;
@@ -111,7 +112,7 @@
     margin-top: 20px;
   }
   .grid-container {
-    grid-template-columns: repeat(4, 1fr); /* 4 columns instead of 8 */
+    grid-template-columns: repeat(4, 1fr); 
   }
 
   .spotCard--2x {
