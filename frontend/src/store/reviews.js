@@ -3,6 +3,7 @@ import { csrfFetch } from './csrf';
 const LOAD_REVIEWS = 'reviews/loadReviews';
 const LOAD_REVIEWS_CURRENT_USER = 'reviews/loadReviewsCurrentUser';
 const REVIEW_DELETED = 'reviews/reviewDeleted'; 
+const ADD_REVIEW = 'reviews/addReview'
 
 // Action creators
 const loadReviews = (reviews, spotId) => ({
@@ -19,6 +20,12 @@ const loadReviewsCurrentUser = (reviews) => ({
 const reviewDeleted = (reviewId) => ({
   type: REVIEW_DELETED,
   reviewId,
+});
+
+export const addReview = (review, spotId) => ({
+  type: ADD_REVIEW,
+  review,
+  spotId,
 });
 
 // Thunk actions
@@ -82,6 +89,13 @@ const reviewsReducer = (state = initialState, action) => {
       });
       return newState;
     }
+    case ADD_REVIEW: {
+      const { review, spotId } = action;
+      const updatedReviews = state.reviews[spotId]?.reviews || [];
+      const newState = {...state}
+      newState.reviews[spotId]=[...updatedReviews, review]
+      return newState
+    }
     
     default:
       return state;
@@ -89,3 +103,4 @@ const reviewsReducer = (state = initialState, action) => {
 };
 
 export default reviewsReducer;
+

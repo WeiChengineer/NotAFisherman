@@ -302,6 +302,7 @@ const NewSpotPage = () => {
           <>
 
             <input
+              key={index}
               id={`image${index + 1}`}
               type="text"
               placeholder="Image URL"

@@ -98,33 +98,29 @@ const SpotDetail = () => {
           </div>
         </div>
         <hr />
-      <section className="reviews">
-  <p className="row items-center avg-reviews">
-    <FaStar /> {avgRatingDisplay}
-    {reviewCount > 0 ? ` · ${reviewCount} Review${reviewCount > 1 ? "s" : ""}` : ""}
-  </p>
-  {currentUser && currentUser.id !== spot.ownerId && !hasAlreadyReviewed && (
-    <button className="spotDetailsbtn" onClick={() => setShowAddReviewModal(true)}>Post Your Review</button>
-  )}
-  {beFirstPostReviewMessage ? (
-    <p>Be the first to post a review!</p>
-  ) : (
-    reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((review) => (
-      <div key={review.id} className="review">
-        <div className="user-name">{review.User.firstName}</div>
-        <div className="review-date"> {new Date(review.createdAt).toLocaleDateString("en-US")}</div>
-        <p className="comment-text">{review.review}</p>
-        {currentUser && currentUser.id === review.userId && (
-          <button className="spotDetailsbtn" onClick={() => {
-            setReviewId(review.id);
-            setShowDeleteModal(true);
-          }}>Delete</button>
-        )}
-      </div>
-    ))
-  )}
-</section>
-
+        <section className="reviews">
+          <p className="row items-center avg-reviews">
+            <FaStar /> {avgRatingDisplay}
+            {reviewCount > 0 ? ` · ${reviewCount} Review${reviewCount > 1 ? "s" : ""}` : ""}
+          </p>
+          {currentUser && currentUser.id !== spot.ownerId && !hasAlreadyReviewed && (
+            <button className="spotDetailsbtn" onClick={() => setShowAddReviewModal(true)}>Post Your Review</button>
+          )}
+          {beFirstPostReviewMessage && <p>Be the first to post a review!</p>}
+          {reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((review) => (
+            <div key={review.id} className="review">
+              <div className="user-name">{review.User.firstName}</div>
+              <div className="review-date"> {new Date(review.createdAt).toLocaleDateString("en-US")}</div>
+              <p className="comment-text">{review.review}</p>
+              {currentUser && currentUser.id === review.userId && (
+                <button className="spotDetailsbtn" onClick={() => {
+                  setReviewId(review.id);
+                  setShowDeleteModal(true);
+                }}>Delete</button>
+              )}
+            </div>
+          ))}
+        </section>
       </div>
       {showAddReviewModal && (
         <AddReviewModal

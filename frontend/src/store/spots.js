@@ -1,6 +1,8 @@
 // frontend/src/store/spots.js
 
 import { csrfFetch } from "./csrf";
+import { addReview } from "./reviews";
+
 
 // Action Types
 const ActionTypes = {
@@ -10,7 +12,6 @@ const ActionTypes = {
   CREATE_SPOT: "spots/createSpot",
   ADD_IMAGE_TO_SPOT: "spots/addImageToSpot",
   REMOVE_SPOT: "spots/removeSpot",
-  ADD_REVIEW: 'spots/addReview'
 };
 
 // Action Creators
@@ -23,11 +24,7 @@ const actionCreators = {
   removeSpot: (spotId) => ({ type: ActionTypes.REMOVE_SPOT, payload: spotId}),
 };
 
-export const addReview = (review, spotId) => ({
-  type: ActionTypes.ADD_REVIEW,
-  review,
-  spotId,
-});
+
 
 // Thunks
 export const getSpots = () => async (dispatch) => {
@@ -158,20 +155,7 @@ const spotsReducer = (state = initialState, action) => {
       delete newSpots[spotId];
       return { ...state, allSpots: newSpots};
     }
-    case ActionTypes.ADD_REVIEW: {
-      const { review, spotId } = action;
-      const updatedReviews = state.spotDetails[spotId]?.reviews || [];
-      return {
-        ...state,
-        spotDetails: {
-          ...state.spotDetails,
-          [spotId]: {
-            ...state.spotDetails[spotId],
-            reviews: [...updatedReviews, review]
-          }
-        }
-      }
-    }
+   
     default:
       return state;
   }

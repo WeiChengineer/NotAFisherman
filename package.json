@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/WeiChengineer/NotAFisherman/issues"
   },
-  "homepage": "https://github.com/WeiChengineer/NotAFisherman#readme"
+  "homepage": "https://github.com/WeiChengineer/NotAFisherman#readme",
+  "dependencies": {
+    "reselect": "^5.1.0"
+  }
 }
