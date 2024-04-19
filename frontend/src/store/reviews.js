@@ -71,10 +71,13 @@ const reviewsReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOAD_REVIEWS: {
       return {
-        ...state,
-        reviews: { ...state.reviews, [action.spotId]: action.payload },
+          ...state,
+          reviews: {
+              ...state.reviews,
+              [action.spotId]: action.payload
+          }
       };
-    }
+  }
     case LOAD_REVIEWS_CURRENT_USER: {
       const currentUserReviews = Object.fromEntries(action.payload.map((review) => [review.id, review]));
       return {
@@ -85,17 +88,22 @@ const reviewsReducer = (state = initialState, action) => {
     case REVIEW_DELETED: {
       const newState = { ...state, reviews: { ...state.reviews } };
       Object.keys(newState.reviews).forEach(spotId => {
-        newState.reviews[spotId] = newState.reviews[spotId].filter(review => review.id !== action.reviewId);
+          newState.reviews[spotId] = newState.reviews[spotId].filter(review => review.id !== action.reviewId);
       });
       return newState;
-    }
+  }
     case ADD_REVIEW: {
       const { review, spotId } = action;
-      const updatedReviews = state.reviews[spotId]?.reviews || [];
-      const newState = {...state}
-      newState.reviews[spotId]=[...updatedReviews, review]
-      return newState
-    }
+      const updatedReviews = state.reviews[spotId] || [];
+      return {
+          ...state,
+          reviews: {
+              ...state.reviews,
+              [spotId]: [...updatedReviews, review]
+          }
+      };
+  }
+  
     
     default:
       return state;

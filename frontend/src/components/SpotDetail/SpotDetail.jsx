@@ -83,7 +83,7 @@ const SpotDetail = () => {
         </div>
         <div className="spotDetails">
           <div className="spotDetailsTexts">
-            <h1 className="spotTitle">Hosted by {spot.Owner.firstName} {spot.Owner.lastName}</h1>
+          <h1 className="spotTitle">Hosted by {spot.Owner?.firstName} {spot.Owner?.lastName}</h1>
             <p className="spotDesc">{spot.description}</p>
           </div>
           <div className="spotDetailsPrice">
@@ -109,7 +109,7 @@ const SpotDetail = () => {
           {beFirstPostReviewMessage && <p>Be the first to post a review!</p>}
           {reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((review) => (
             <div key={review.id} className="review">
-              <div className="user-name">{review.User.firstName}</div>
+              <div className="user-name">{review.User?.firstName}</div>
               <div className="review-date"> {new Date(review.createdAt).toLocaleDateString("en-US")}</div>
               <p className="comment-text">{review.review}</p>
               {currentUser && currentUser.id === review.userId && (

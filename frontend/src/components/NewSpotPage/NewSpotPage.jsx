@@ -299,8 +299,7 @@ const NewSpotPage = () => {
           <p className="error-message">{errors.previewImage}</p>
         )}
         {images.map((img, index) => (
-          <>
-
+        
             <input
               key={index}
               id={`image${index + 1}`}
@@ -309,7 +308,6 @@ const NewSpotPage = () => {
               value={img}
               onChange={(e) => handleImageChange(index, e.target.value)}
             />
-          </>
         ))}
 
         <hr />
