@@ -9,6 +9,8 @@ const ActionTypes = {
   LOAD_SPOTS_CURRENT_USER: "spots/loadSpotsCurrentUser",
   CREATE_SPOT: "spots/createSpot",
   ADD_IMAGE_TO_SPOT: "spots/addImageToSpot",
+  REMOVE_SPOT: "spots/removeSpot",
+  ADD_REVIEW: 'spots/addReview'
 };
 
 // Action Creators
@@ -18,7 +20,14 @@ const actionCreators = {
   loadSpotsCurrentUser: (spots) => ({ type: ActionTypes.LOAD_SPOTS_CURRENT_USER, payload: spots }),
   createSpot: (spot) => ({ type: ActionTypes.CREATE_SPOT, payload: spot }),
   addImageToSpot: (image, spotId) => ({ type: ActionTypes.ADD_IMAGE_TO_SPOT, payload: { image, spotId } }),
+  removeSpot: (spotId) => ({ type: ActionTypes.REMOVE_SPOT, payload: spotId}),
 };
+
+export const addReview = (review, spotId) => ({
+  type: ActionTypes.ADD_REVIEW,
+  review,
+  spotId,
+});
 
 // Thunks
 export const getSpots = () => async (dispatch) => {
@@ -82,16 +91,38 @@ export const addImageToSpotById = (spotId, imageUrl, isPreview) => async (dispat
 };
 
 export const addReviewToSpotById = (spotId, reviewData) => async (dispatch) => {
-  await csrfFetch(`/api/spots/${spotId}/reviews`, {
+  const response = await csrfFetch(`/api/spots/${spotId}/reviews`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(reviewData),
   });
+
+  if (response.ok) {
+    const newReview = await response.json();
+    dispatch(addReview(newReview, spotId));
+  } else {
+    const errorData = await response.json();
+    throw new Error(errorData.error);
+  }
 };
 
-export const deleteSpotById = (spotId) => async () => {
-  return await csrfFetch(`/api/spots/${spotId}`, { method: "DELETE" });
+
+
+export const deleteSpotById = (spotId) => async (dispatch) => {
+  try {
+      const response = await csrfFetch(`/api/spots/${spotId}`, { method: "DELETE" });
+      if (response.ok) {
+          dispatch(actionCreators.removeSpot(spotId));
+      } else {
+          throw new Error('Failed to delete the spot');
+      }
+  } catch (error) {
+      console.error('Delete operation failed:', error);
+      throw error; 
+  }
 };
+
+
 
 // Reducer
 const initialState = { allSpots: {}, spotDetails: {} };
@@ -120,6 +151,26 @@ const spotsReducer = (state = initialState, action) => {
       const spotImages = newState.spotDetails[spotId]?.SpotImages || [];
       newState.spotDetails[spotId] = { ...newState.spotDetails[spotId], SpotImages: [...spotImages, image] };
       return newState;
+    }
+    case ActionTypes.REMOVE_SPOT: {
+      const spotId = action.payload;
+      const newSpots = { ...state.allSpots};
+      delete newSpots[spotId];
+      return { ...state, allSpots: newSpots};
+    }
+    case ActionTypes.ADD_REVIEW: {
+      const { review, spotId } = action;
+      const updatedReviews = state.spotDetails[spotId]?.reviews || [];
+      return {
+        ...state,
+        spotDetails: {
+          ...state.spotDetails,
+          [spotId]: {
+            ...state.spotDetails[spotId],
+            reviews: [...updatedReviews, review]
+          }
+        }
+      }
     }
     default:
       return state;

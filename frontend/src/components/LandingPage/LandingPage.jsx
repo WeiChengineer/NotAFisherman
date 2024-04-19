@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSpots, getSpotsCurrentUser } from '../../store/spots';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
+import { deleteSpotById } from "../../store/spots";
 import DeleteModal from '../DeleteModal';
 import './LandingPage.css';
 import Card from '../Card';
@@ -22,8 +23,8 @@ const LandingPage = () => {
 
   const handleDeleteConfirmed = () => {
       dispatch(deleteSpotById(selectedSpotId)).then(() => {
-          refreshSpots();  // Re-fetch the spots
-          toggleDeleteModal();  // Close the modal
+          refreshSpots();  
+          toggleDeleteModal();  
       }).catch(error => {
           console.error('Failed to delete spot:', error);
       });
@@ -54,7 +55,7 @@ const LandingPage = () => {
                   <div key={spot.id} className="spot-tile-link">
                       <Card
                           id={spot.id}
-                          src={spot.previewImage || "https://a2.muscache.com/im/pictures/6152848/b04eddeb_original.jpg?aki_policy=x_medium"}
+                          src={spot.previewImage}
                           title={spot.name}
                           description={`${spot.city}, ${spot.state}`}
                           price={parseFloat(spot.price).toFixed(2)}

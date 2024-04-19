@@ -18,25 +18,24 @@ const AddReviewModal = ({ visible, onClose, spotId }) => {
     if (isFormValid) {
       dispatch(addReviewToSpotById(spotId, { review: comment, stars: rating }))
         .then(() => {
-          onClose();  // Close the modal
-          setComment('');  // Reset comment
-          setRating(null);  // Reset rating
+          onClose(); 
+          setComment('');  
+          setRating(null); 
         })
-        .catch(async (res) => {
-          const data = await res.json();
-          if (data && data.errors) {
-            setErrors(data.errors);
-          }
+        .catch((error) => {      
+          console.error('Error posting review:', error);
+          setErrors({ submit: error.message });
         });
     }
   };
+  
 
   return (
     <Modal
       body={
         <div className="form-container">
-          <h3>How was your stay?</h3> {/* Moved header inside modal body for better error placement */}
-          {Object.keys(errors).length > 0 && (  // Display errors below the title
+          <h3>How was your stay?</h3> {}
+          {Object.keys(errors).length > 0 && ( 
             <div className="error-messages">
               {Object.values(errors).map((error, index) => (
                 <div key={index}>{error}</div>

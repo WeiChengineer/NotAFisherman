@@ -76,14 +76,13 @@ const reviewsReducer = (state = initialState, action) => {
       };
     }
     case REVIEW_DELETED: {
-      const newState = { ...state };
-      Object.keys(newState.reviews).forEach((spotId) => {
-        if (newState.reviews[spotId][action.reviewId]) {
-          delete newState.reviews[spotId][action.reviewId];
-        }
+      const newState = { ...state, reviews: { ...state.reviews } };
+      Object.keys(newState.reviews).forEach(spotId => {
+        newState.reviews[spotId] = newState.reviews[spotId].filter(review => review.id !== action.reviewId);
       });
       return newState;
     }
+    
     default:
       return state;
   }
