@@ -98,7 +98,7 @@ const SpotDetail = () => {
           </div>
         </div>
         <hr />
-        <section className="reviews">
+      <section className="reviews">
   <p className="row items-center avg-reviews">
     <FaStar /> {avgRatingDisplay}
     {reviewCount > 0 ? ` · ${reviewCount} Review${reviewCount > 1 ? "s" : ""}` : ""}
