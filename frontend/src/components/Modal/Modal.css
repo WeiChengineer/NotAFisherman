@@ -43,10 +43,11 @@
 .modal__footer {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  align-items: center; 
+  gap: 10px; 
 }
 .modal__btn {
-  width: 50%;
+  width: 64%;
   margin-inline: auto;
   /* margin-top: 4rem; */
   padding: 1rem 1.6rem;
@@ -64,7 +65,7 @@
 }
 
 .modal__btn__secondary {
-  width: 50%;
+  width: 64%;
   margin-inline: auto;
   /* margin-top: 4rem; */
   padding: 1rem 1.6rem;
