@@ -103,7 +103,7 @@ const NewSpotPage = () => {
       return;
     }
     dispatch(updateSpot(spotData, spotId))
-      .then((newSpot) => {
+      .then(() => {
         navigate(`/spots/${spotId}`);
       })
       .catch((error) => {
@@ -121,9 +121,9 @@ const NewSpotPage = () => {
     setImages(updatedImages);
   };
 
-  const imageErrors = images
-    .map((_, index) => errors[`image${index}`])
-    .filter((error) => error);
+  // const imageErrors = images
+  //   .map((_, index) => errors[`image${index}`])
+  //   .filter((error) => error);
 
   useEffect(() => {
     if (spotId) {
