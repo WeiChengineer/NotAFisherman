@@ -10,6 +10,7 @@ import SignupFormModal from "../SignupFormModal";
 function UserMenu({ user }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const user = useSelector(state => state.session.user); 
   const [showDropdown, setShowDropdown] = useState(false);
   const [showLoginModal, setLoginModal] = useState(false);
   const [showSignUpModal, setSignUpModal] = useState(false);
@@ -47,7 +48,7 @@ function UserMenu({ user }) {
 
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [dropdownRef]);
+  }, [dropdownRef, showDropdown]);
 
   return (
     <>
