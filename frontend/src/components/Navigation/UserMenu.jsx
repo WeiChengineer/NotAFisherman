@@ -19,11 +19,11 @@ function UserMenu({ user }) {
     setShowDropdown((prev) => !prev);
   };
 
-  const logout = (e) => {
+  const logout = async (e) => {
     e.preventDefault();
-    dispatch(sessionActions.logout());
-    setShowDropdown(false);
-    navigate("/");
+    setShowDropdown(false); 
+    await dispatch(sessionActions.logout());
+    navigate("/"); 
   };
 
   const updateLoginModalVisibility = () => {
