@@ -41,7 +41,7 @@ nav ul li {
   /* line-height: 70px; */
   color: black;
   cursor: pointer;
-
+  
   text-decoration: none;
 }
 nav ul li:hover {
@@ -58,7 +58,29 @@ nav ul li:hover {
   background-color: white;
   z-index: 10000;
   min-width: 190px;
+  border-bottom: 1px solid #d6d5d5; 
 }
+
+.logout-button {
+  display: block; 
+  width: 80%; 
+  margin: 8px auto; 
+  padding: 10px; 
+  background-color: transparent; 
+  color: black; 
+  border: 2px solid black; 
+  border-radius: 20px; 
+  text-align: center; 
+  cursor: pointer;
+  font-size: medium; 
+  outline: none; 
+}
+
+.logout-button:hover {
+  background-color: #ff5a5f; 
+  color: #fff; 
+}
+
 .menu-item p {
   height: fit-content;
   padding: 0px;
@@ -80,13 +102,13 @@ nav ul li:hover {
 }
 
 .navigation-logo {
-  width: 80px;
+  width: 50px;
   height: auto;
   vertical-align: middle; 
 }
 
 .logo-text {
-  font-size: 20px;
-  vertical-align: middle; 
-  margin-left: 10px;
+  font-size: 20px; 
+  vertical-align: middle;  
+  margin-left: 10px; 
 }

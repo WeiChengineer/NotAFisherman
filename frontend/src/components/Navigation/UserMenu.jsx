@@ -10,7 +10,6 @@ import SignupFormModal from "../SignupFormModal";
 function UserMenu({ user }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector(state => state.session.user); 
   const [showDropdown, setShowDropdown] = useState(false);
   const [showLoginModal, setLoginModal] = useState(false);
   const [showSignUpModal, setSignUpModal] = useState(false);
@@ -48,14 +47,14 @@ function UserMenu({ user }) {
 
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [dropdownRef, showDropdown]);
+  }, [dropdownRef]);
 
   return (
     <>
       {user ? (
         <NavLink to="/my-spot">
           <li>
-            <p>Create a spot</p>
+            <p>Create a new spot</p>
           </li>
         </NavLink>
       ) : null}
@@ -73,17 +72,19 @@ function UserMenu({ user }) {
                 <NavLink to="/my-spots">
                   <li className="menu-item">Manage Spots</li>
                 </NavLink>
-                <li className="menu-item" onClick={logout}>
-                  Logout
+                <li className="menu-item">
+                  <button className="logout-button" onClick={logout}>
+                  Log out
+                  </button>
                 </li>
               </>
             ) : (
               <>
                 <li className="menu-item" onClick={updateLoginModalVisibility}>
-                  Login
+                  Log in
                 </li>
                 <li className="menu-item" onClick={updateSignUpModalVisibility}>
-                  SignUp
+                  Sign Up
                 </li>
               </>
             )}

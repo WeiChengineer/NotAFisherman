@@ -106,7 +106,7 @@ const SpotDetail = () => {
           {currentUser && currentUser.id !== spot.ownerId && !hasAlreadyReviewed && (
             <button className="spotDetailsbtn" onClick={() => setShowAddReviewModal(true)}>Post Your Review</button>
           )}
-          {beFirstPostReviewMessage && <p>Be the first to post a review!</p>}
+          {beFirstPostReviewMessage && <p className="furst-review-message">Be the first to post a review!</p>}
           {reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).map((review) => (
             <div key={review.id} className="review">
               <div className="user-name">{review.User?.firstName}</div>

@@ -30,3 +30,7 @@ input[type="radio"] {
 textarea {
   width: 350px;
 }
+
+.stars-label {
+  font-size: small;
+}

@@ -26,7 +26,6 @@
   flex-grow: 1; 
   display: flex;
   flex-direction: column; 
-  justify-content: space-between; 
 }
 
 .card__info > h3, .card__info > h4 {

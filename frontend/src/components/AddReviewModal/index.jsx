@@ -11,7 +11,7 @@ const AddReviewModal = ({ visible, onClose, spotId }) => {
   const [hover, setHover] = useState(null);
   const [errors, setErrors] = useState({});
 
-  const isFormValid = comment.length > 10 && rating !== null;
+  const isFormValid = comment.length > 9 && rating !== null;
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -37,11 +37,11 @@ const LandingPage = () => {
             dispatch(getSpots());
         }
     }, [dispatch, isMySpotsRoute]);
-    
+
     useEffect(() => {
         refreshSpots();
     }, [refreshSpots]);
-    
+
 
     const openDeleteModal = (spotId) => {
         setSelectedSpotId(spotId);
@@ -50,31 +50,40 @@ const LandingPage = () => {
 
     return (
         <div className="home__section">
-            {isMySpotsRoute && <h1>Manage Spots</h1>}
-            {spots.length > 0 ? (
-                spots.map(spot => (
-                    <div key={spot.id} className="spot-tile-link">
-                        <Card
-                            id={spot.id}
-                            src={spot.previewImage}
-                            title={spot.name}
-                            description={`${spot.city}, ${spot.state}`}
-                            price={parseFloat(spot.price).toFixed(2)}
-                            rating={parseFloat(spot.avgRating).toFixed(2) !== 'NaN' ? parseFloat(spot.avgRating).toFixed(2) : 'New'}
-                        />
-                        {isMySpotsRoute && (
-                            <div className="spot-actions">
-                                <button className="update_spot_btn" onClick={() => navigate(`/my-spot/${spot.id}`)}>Update</button>
-                                <button className="delete_spot_btn" onClick={() => openDeleteModal(spot.id)}>Delete</button>
-                            </div>
-                        )}
-                    </div>
-                ))
-            ) : (
-                <div className="create-spot-link">
-                    <Link to="/my-spot">Create a New Spot</Link>
+            {isMySpotsRoute && (
+                <div className="manage-spots-header">
+                    <h1>Manage Your Spots</h1>
+                    {spots.length === 0 && (
+                        <Link to="/my-spot" className="create-spot-link">Create a New Spot</Link>
+                    )}
                 </div>
             )}
+
+            <div className="spot-tiles-container">
+                {spots.length > 0 ? (
+                    spots.map((spot) => (
+                        <div key={spot.id} className="spot-tile-link">
+                            <Card
+                                id={spot.id}
+                                src={spot.previewImage}
+                                title={spot.name}
+                                description={`${spot.city}, ${spot.state}`}
+                                price={`$${parseFloat(spot.price).toFixed(2)}`}
+                                rating={parseFloat(spot.avgRating).toFixed(2) !== 'NaN' ? parseFloat(spot.avgRating).toFixed(2) : 'New'}
+                            />
+                            {isMySpotsRoute && (
+                                <div className="spot-actions">
+                                    <button className="update_spot_btn" onClick={() => navigate(`/my-spot/${spot.id}`)}>Update</button>
+                                    <button className="delete_spot_btn" onClick={() => openDeleteModal(spot.id)}>Delete</button>
+                                </div>
+                            )}
+                        </div>
+                    ))
+                ) : (
+                    !isMySpotsRoute && <p>No spots available.</p>
+                )}
+            </div>
+
             {showDeleteModal && (
                 <DeleteModal
                     visible={showDeleteModal}

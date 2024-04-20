@@ -44,10 +44,11 @@ function LoginFormModal({ visible, onClose }) {
         body={
           <>
             <div className="form-container">
-              {errors.credential && (
-                <p className="error-message">{errors.credential}</p>
-              )}
               <form onSubmit={handleSubmit} className="form">
+                {errors.credential && (
+                  <p className="error-message">{errors.credential}</p>
+                )}
+
                 <input
                   type="text"
                   value={credential}
